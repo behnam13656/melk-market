@@ -45,3 +45,19 @@
     margin-left: 10px;
   }
 }
+@media (max-width: 768px) {
+  .header {
+    flex-direction: column; /* آيتم‌ها زیر هم */
+    align-items: flex-start; /* بچسبن سمت راست */
+  }
+
+  .header ul {
+    flex-direction: column; /* منو عمودی */
+    width: 100%;
+    margin-top: 10px;
+  }
+
+  .header ul li {
+    margin: 10px 0;
+  }
+}

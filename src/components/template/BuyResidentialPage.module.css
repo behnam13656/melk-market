@@ -4,6 +4,7 @@
   margin-top: 80px;
 }
 
+/* سایدبار */
 .sidebar {
   display: flex;
   flex-direction: column;
@@ -16,11 +17,13 @@
   width: 220px;
 }
 
+/* محتوای اصلی (کارت‌ها) */
 .main {
   width: 100%;
   display: flex;
   flex-wrap: wrap;
-  justify-content: space-between;
+  gap: 20px; /* فاصله بهتر از justify-content */
+  justify-content: flex-start;
 }
 
 .text {
@@ -30,4 +33,27 @@
   padding: 10px 15px;
   border-radius: 10px;
   height: 50px;
+}
+
+/* 📱 ریسپانسیو */
+@media (max-width: 992px) {
+  .container {
+    flex-direction: column; /* سایدبار میاد بالا */
+    align-items: center;
+  }
+
+  .sidebar {
+    width: 100%;
+    margin: 0 0 20px 0;
+  }
+
+  .main {
+    justify-content: center; /* کارت‌ها می‌چینن وسط */
+  }
+}
+
+@media (max-width: 576px) {
+  .text {
+    font-size: 1rem; /* فونت کوچیک‌تر */
+  }
 }

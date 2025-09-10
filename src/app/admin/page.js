@@ -1,12 +1,13 @@
-import DashboardSidebar from "@/components/layout/DashboardSidebar";
-import User from "@/models/User";
-import connectDB from "@/utils/connectDB";
-import { getServerSession } from "next-auth";
-import React from "react";
-import { authOptions } from "../api/auth/[...nextauth]/route";
 import { redirect } from "next/navigation";
-import AdminPage from "@/components/template/AdminPage";
+import { getServerSession } from "next-auth";
+import connectDB from "@/utils/connectDB";
+import User from "@/models/User";
 import Profile from "@/models/Profile";
+import { authOptions } from "../api/auth/[...nextauth]/route";
+import DashboardSidebar from "@/components/layout/DashboardSidebar";
+import AdminPage from "@/components/template/AdminPage";
+
+
 export const metadata = {
   title: "پنل ادمین | ملک مارکت",
 };
@@ -17,11 +18,11 @@ async function Admin() {
 
   const user = await User.findOne({ email: session.user.email });
   if (user.role !== "ADMIN") redirect("/dashboard");
-  
 
   const profiles = await Profile.find({ published: false });
+
   return (
-    <DashboardSidebar role={user.email} email={user.email}>
+    <DashboardSidebar role={user.role} email={user.email}>
       <AdminPage profiles={profiles} />
     </DashboardSidebar>
   );

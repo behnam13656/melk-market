@@ -20,8 +20,37 @@
   font-size: 1.4rem;
   margin-bottom: 10px;
 }
-.desc p{
+
+.desc p {
   text-align: justify;
   width: 60%;
   line-height: 1.7rem;
+}
+
+/* 📱 ریسپانسیو */
+@media (max-width: 992px) {
+  .footer {
+    flex-direction: column;  /* محتوا زیر هم */
+    text-align: center;
+  }
+
+  .desc {
+    width: 100%;
+    margin: 20px 0 0 0;
+  }
+
+  .desc p {
+    width: 100%; /* متن تمام عرض */
+  }
+}
+
+@media (max-width: 576px) {
+  .desc h3 {
+    font-size: 1.1rem; /* کوچیک‌تر روی موبایل */
+  }
+
+  .desc p {
+    font-size: 0.9rem;
+    line-height: 1.5rem;
+  }
 }

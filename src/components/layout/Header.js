@@ -11,7 +11,7 @@ function Header() {
       <div>
         <ul>
           <li>
-            <Link href={"/"}>خانه</Link>
+            <Link href={"/"}>صفحه اصلی</Link>
           </li>
           <li>
             <Link href="/buy-residential">آگهی ها</Link>
@@ -22,16 +22,15 @@ function Header() {
         <div className={styles.login}>
           <Link href={"/dashboard"}>
             <FaUserAlt />
-            
           </Link>
-        </div> 
+        </div>
       ) : (
         <div className={styles.login}>
           <Link href={"/signup"}>
             <IoIosLogIn />
             <span>ورود</span>
           </Link>
-        </div> 
+        </div>
       )}
     </div>
   );

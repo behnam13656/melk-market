@@ -8,7 +8,7 @@ async function BuyResidential({ searchParams }) {
 
   try {
     const res = await fetch("http://localhost:3000/api/profile", {
-      cache: "force-cache", // یا "no-store" اگه داده لحظه‌ای میخوای
+      cache: "no-store", // یا "no-store" اگه داده لحظه‌ای میخوای
     });
     data = await res.json();
   } catch (err) {
