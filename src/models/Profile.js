@@ -43,6 +43,10 @@ const profileSchema = new Schema(
       type: [String],
       default: [],
     },
+    images: {
+      type: [String], // آرایه‌ای از آدرس یا لینک عکس‌ها
+      default: [],
+    },
     userId: {
       type: Schema.Types.ObjectId,
       ref: "User",

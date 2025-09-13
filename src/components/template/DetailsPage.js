@@ -1,4 +1,3 @@
-
 import { SiHomebridge } from "react-icons/si";
 import { AiOutlinePhone } from "react-icons/ai";
 import { HiOutlineLocationMarker } from "react-icons/hi";
@@ -9,6 +8,7 @@ import { e2p, sp } from "@/utils/replaceNumber";
 import { icons } from "@/constants/icons";
 import { categories } from "@/constants/strings";
 import ShareButton from "../module/ShareButton";
+import ImageGallery from "../module/ImageGallery";
 
 function DetailsPage({
   data: {
@@ -22,11 +22,15 @@ function DetailsPage({
     price,
     category,
     constructionDate,
+    images,
   },
 }) {
   return (
     <div className={styles.container}>
       <div className={styles.main}>
+        <div className={styles.imageGalleryWrapper}>
+          {images?.length > 0 && <ImageGallery images={images} />}
+        </div>
         <h2>{title}</h2>
         <span>
           <HiOutlineLocationMarker />
@@ -48,7 +52,7 @@ function DetailsPage({
             {e2p(phone)}
           </span>
         </div>
-        <ShareButton/>
+        <ShareButton />
         <div className={styles.price}>
           <p>
             {icons[category]}
@@ -56,8 +60,9 @@ function DetailsPage({
           </p>
           <p>{sp(price)} نومان</p>
           <p>
-            <BiCalendarCheck/>
-            {new Date(constructionDate).toLocaleDateString("fa-IR")}</p>
+            <BiCalendarCheck />
+            {new Date(constructionDate).toLocaleDateString("fa-IR")}
+          </p>
         </div>
       </div>
     </div>

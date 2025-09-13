@@ -7,7 +7,7 @@ function CategoryCard({ title, name }) {
     <div className={styles.card}>
       <Link href={`/buy-residential?category=${name}`}>
         <Image
-          src={`/images/${name}.png`}
+          src={`/images/${name}.webp`}
           alt={title}
           width={240}
           height={144}

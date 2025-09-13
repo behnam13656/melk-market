@@ -1,18 +1,26 @@
+/* کانتینر اصلی */
 .container {
   display: flex;
+  gap: 40px; /* فاصله بین main و sidebar */
   margin-top: 60px;
+  align-items: flex-start;
+  flex-wrap: wrap; /* برای موبایل */
 }
 
+/* بخش اصلی */
 .main {
-  width: 100%;
+  flex: 3; /* اندازه نسبی */
+  min-width: 0; /* جلوگیری از overflow داخل flex */
 }
 
+/* تیترها */
 .main h2 {
   color: #304ffe;
   font-size: 1.3rem;
   font-weight: 400;
   margin-bottom: 10px;
 }
+
 .title {
   color: #304ffe;
   font-size: 1.1rem;
@@ -21,17 +29,18 @@
   padding-bottom: 10px;
   position: relative;
 }
+
 .title::after {
   content: "";
   position: absolute;
   right: 0;
-  bottom: -5px; /* فاصله از متن */
-
+  bottom: -5px;
   width: 30%;
-  height: 5px; /* ضخامت خط */
-  background-color: #304ffe; /* رنگ خط */
-  border-radius: 10px; /* گرد کردن خط */
+  height: 5px;
+  background-color: #304ffe;
+  border-radius: 10px;
 }
+
 .main span {
   display: flex;
   align-items: flex-start;
@@ -50,9 +59,10 @@
   margin-bottom: 50px;
 }
 
+/* Sidebar */
 .sidebar {
-  width: 250px;
-  margin-right: 40px;
+  flex: 1; /* اندازه نسبی */
+  min-width: 150px; /* حداقل عرض */
 }
 
 .sidebar div {
@@ -60,13 +70,16 @@
   padding: 10px;
   border-radius: 10px;
   margin-bottom: 20px;
+  width: 230px;
 }
 
+/* بخش RealState */
 .realState {
   display: flex;
   flex-direction: column;
   align-items: center;
 }
+
 .realState svg {
   font-size: 3rem;
   color: #304ffe;
@@ -87,11 +100,11 @@
 
 .realState span svg {
   font-size: 1.4rem;
-  margin: 0;
   margin-left: 5px;
   color: grey;
 }
 
+/* Share Button */
 .share {
   display: flex;
   align-items: center;
@@ -118,12 +131,14 @@
   color: #304ffe;
 }
 
+/* بخش Price */
 .price {
   display: flex;
   flex-direction: column;
   align-items: center;
   padding: 20px 0 0 !important;
 }
+
 .price p {
   display: flex;
   align-items: center;
@@ -136,4 +151,74 @@
   font-size: 1.5rem;
   margin-left: 5px;
   color: #304ffe;
+}
+
+/* گالری عکس */
+.imageGalleryWrapper {
+  width: 100%;
+  margin-bottom: 20px;
+}
+
+.imageGalleryWrapper img {
+  width: 100%;
+  height: 250px;
+  object-fit: cover;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+/* مودال فول‌اسکرین */
+.fullscreenModal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.95);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+}
+
+.fullscreenModal img {
+  max-width: 90%;
+  max-height: 90%;
+  object-fit: contain;
+  border-radius: 10px;
+}
+
+.fullscreenModal .closeBtn {
+  position: absolute;
+  top: 20px;
+  right: 30px;
+  background: rgba(255,255,255,0.2);
+  border: none;
+  color: white;
+  font-size: 22px;
+  padding: 8px 12px;
+  border-radius: 50%;
+  cursor: pointer;
+  z-index: 10000;
+  transition: 0.3s;
+}
+
+.fullscreenModal .closeBtn:hover {
+  background: red;
+}
+
+/* واکنشگرایی موبایل */
+@media (max-width: 768px) {
+  .container {
+    flex-direction: column;
+  }
+
+  .sidebar {
+    min-width: 100%;
+    margin-right: 0;
+  }
+
+  .main {
+    flex: 1;
+  }
 }

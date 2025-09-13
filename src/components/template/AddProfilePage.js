@@ -21,22 +21,123 @@ function AddProfilePage({ data }) {
     category: "",
     rules: [],
     amenities: [],
+    images: [], // {file, preview, uploaded, url, progress}
   });
+
   useEffect(() => {
-    if (data) setProfileData(data);
-  }, []);
+    if (data) {
+      setProfileData({
+        ...data,
+        images: data.images.map((url) => ({
+          file: null,
+          preview: url,
+          uploaded: true,
+          url,
+          progress: 100,
+        })),
+      });
+    }
+  }, [data]);
 
   const router = useRouter();
   const [loading, setLoading] = useState(false);
-  const submitHandelr = async () => {
-    setLoading(true);
+
+  // انتخاب تصاویر
+  const handleImagesChange = (e) => {
+    const files = Array.from(e.target.files);
+    if (!files.length) return;
+
+    const newImages = files.map((file) => ({
+      file,
+      preview: URL.createObjectURL(file),
+      uploaded: false,
+      url: null,
+      progress: 0,
+    }));
+
+    setProfileData((prev) => {
+      prev.images.forEach(
+        (img) => img.file && img.preview && URL.revokeObjectURL(img.preview)
+      );
+      return { ...prev, images: [...prev.images, ...newImages] };
+    });
+  };
+
+  // ثبت یا ویرایش آگهی
+// ثبت یا ویرایش آگهی
+const submitProfile = async (method = "POST") => {
+  // 📌 ولیدیشن شماره تماس
+  const phonePattern = /^09\d{9}$/;
+  if (!phonePattern.test(profileData.phone)) {
+    return toast.error("شماره تماس باید 11 رقم و با 09 شروع شود");
+  }
+
+  // 📌 ولیدیشن عنوان
+  if (!profileData.title?.trim()) {
+    return toast.error("عنوان آگهی وارد نشده");
+  }
+  if (profileData.title.trim().length < 5) {
+    return toast.error("عنوان آگهی نباید کمتر از 5 حرف باشد");
+  }
+
+  // 📌 ولیدیشن توضیحات
+  if (!profileData.description?.trim()) {
+    return toast.error("توضیحات وارد نشده");
+  }
+
+  // 📌 ولیدیشن قیمت
+  const priceStr = String(profileData.price ?? ""); // همیشه تبدیل به استرینگ
+  if (!priceStr.trim()) {
+    return toast.error("قیمت وارد نشده");
+  }
+
+  const priceNum = Number(priceStr.replace(/,/g, "")); // حذف کاما و تبدیل به عدد
+  if (isNaN(priceNum)) {
+    return toast.error("قیمت باید عدد باشد");
+  }
+  if (priceNum < 1000000) {
+    return toast.error("قیمت نباید کمتر از 1 میلیون باشد");
+  }
+
+  // 🚀 آپلود و ارسال
+  setLoading(true);
+  try {
+    // آپلود تصاویر
+    const imagesUrls = [];
+    for (const img of profileData.images) {
+      if (!img.uploaded && img.file) {
+        const formData = new FormData();
+        formData.append("images", img.file);
+
+        const res = await fetch("/api/upload", {
+          method: "POST",
+          body: formData,
+        });
+
+        const data = await res.json();
+        if (!res.ok || !data.urls) throw new Error("آپلود تصویر موفق نبود");
+
+        imagesUrls.push(data.urls[0]);
+      } else if (img.uploaded) {
+        imagesUrls.push(img.url);
+      }
+    }
+
+    // دیتای نهایی
+    const finalData = {
+      ...profileData,
+      price: priceNum, // به عدد ذخیره شه
+      images: imagesUrls,
+    };
+
+    // ذخیره پروفایل
     const res = await fetch("/api/profile", {
-      method: "POST",
-      body: JSON.stringify(profileData),
+      method,
+      body: JSON.stringify(finalData),
       headers: { "Content-Type": "application/json" },
     });
+
     const data = await res.json();
-    setLoading(false);
     if (data.error) {
       toast.error(data.error);
     } else {
@@ -44,27 +145,18 @@ function AddProfilePage({ data }) {
       router.push("/dashboard/my-profile");
       router.refresh();
     }
-  };
-  const editHandelr = async () => {
-    setLoading(true);
-    const res = await fetch("/api/profile", {
-      method: "PATCH",
-      body: JSON.stringify(profileData),
-      headers: { "Content-Type": "application/json" },
-    });
-    const data = await res.json();
+  } catch (err) {
+    toast.error(err.message);
+  } finally {
     setLoading(false);
-    if (data.error) {
-      toast.error(data.error);
-    } else {
-      toast.success(data.message);
-      router.push("/dashboard/my-profile");
-      router.refresh();
-    }
-  };
+  }
+};
+
+
   return (
     <div className={styles.container}>
       <h3>{data ? "ویرایش آگهی" : "ثبت آگهی"}</h3>
+
       <TextInput
         title="عنوان آگهی"
         name="title"
@@ -76,7 +168,7 @@ function AddProfilePage({ data }) {
         name="description"
         profileData={profileData}
         setProfileData={setProfileData}
-        textarea={true}
+        textarea
       />
       <TextInput
         title="آدرس"
@@ -102,6 +194,7 @@ function AddProfilePage({ data }) {
         profileData={profileData}
         setProfileData={setProfileData}
       />
+
       <RadioList profileData={profileData} setProfileData={setProfileData} />
       <TextList
         title="امکانات رفاهی"
@@ -119,24 +212,67 @@ function AddProfilePage({ data }) {
         profileData={profileData}
         setProfileData={setProfileData}
       />
+
+      <div className={styles.imageUpload}>
+        <label className={styles.uploadLabel}>
+          + افزودن عکس
+          <input
+            type="file"
+            multiple
+            accept="image/*"
+            onChange={handleImagesChange}
+            style={{ display: "none" }}
+          />
+        </label>
+
+        <div className={styles.preview}>
+          {profileData.images.map((img, index) => (
+            <div key={index} className={styles.imageBox}>
+              <img
+                src={img.uploaded ? img.url : img.preview}
+                alt={`preview-${index}`}
+              />
+              <button
+                type="button"
+                className={styles.removeBtn}
+                onClick={() =>
+                  setProfileData((prev) => {
+                    const updated = [...prev.images];
+                    if (!updated[index].uploaded && updated[index].preview)
+                      URL.revokeObjectURL(updated[index].preview);
+                    updated.splice(index, 1);
+                    return { ...prev, images: updated };
+                  })
+                }
+              >
+                ✕
+              </button>
+            </div>
+          ))}
+        </div>
+      </div>
+
       {loading ? (
         <ThreeDots
-          visible={true}
+          visible
           height="80"
           width="80"
           color="#304ffe"
-          ariaLabel="three-dots-loading"
-          wrapperStyle={{ margin: "auto " }}
+          wrapperStyle={{ margin: "auto" }}
         />
       ) : data ? (
-        <button className={styles.submit} onClick={editHandelr}>
+        <button
+          className={styles.submit}
+          onClick={() => submitProfile("PATCH")}
+        >
           ویرایش آگهی
         </button>
       ) : (
-        <button className={styles.submit} onClick={submitHandelr}>
+        <button className={styles.submit} onClick={() => submitProfile("POST")}>
           ثبت آگهی
         </button>
       )}
+
       <Toaster />
     </div>
   );
