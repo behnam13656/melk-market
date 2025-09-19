@@ -6,7 +6,7 @@ import { FaLocationDot } from "react-icons/fa6";
 import { GiOfficeChair } from "react-icons/gi";
 import { sp } from "@/utils/replaceNumber";
 import Link from "next/link";
-function Card({ data: {_id, category, title, price, location } }) {
+function Card({ data: { _id, category, title, price, location,images } }) {
   const icons = {
     villa: <RiHome3Line />,
     apartment: <MdApartment />,
@@ -14,19 +14,18 @@ function Card({ data: {_id, category, title, price, location } }) {
     office: <GiOfficeChair />,
   };
   return (
-    <div className={styles.container}>
-      <div className={styles.icon}>{icons[category]}</div>
-      <p className={styles.title}>{title}</p>
-      <p className={styles.location}>
-        <FaLocationDot/>
-        {location}
-      </p>
-      <span>{sp(price)} تومان</span>
-       <Link href={`/buy-residential/${_id}`}>
-        مشاهده آگهی
-        <BiLeftArrowAlt />
-      </Link>
-    </div>
+    <Link href={`/buy-residential/${_id}`}>
+      <div className={styles.container}>
+        
+        <div className={styles.icon}>{icons[category]}</div>
+        <p className={styles.title}>{title}</p>
+        <p className={styles.location}>
+          <FaLocationDot />
+          {location}
+        </p>
+        <span>{sp(price)} تومان</span>
+      </div>
+    </Link>
   );
 }
 

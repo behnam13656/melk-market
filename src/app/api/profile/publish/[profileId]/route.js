@@ -8,7 +8,7 @@ export async function PATCH(req, context) {
   try {
     await connectDB();
 
-    const id = context.params.profileId;
+    const id = await context.params.profileId;
 
     const session = await getServerSession(req);
     if (!session) {

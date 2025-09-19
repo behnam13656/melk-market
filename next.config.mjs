@@ -1,11 +1,9 @@
-/** @type {import('next').NextConfig} */
+// next.config.mjs
 const nextConfig = {
+  reactStrictMode: true,
   experimental: {
-    serverActions: true,
+    appDir: true,
   },
-  serverActions: {
-    bodySizeLimit: "1gb", // 1 گیگابایت
-  },
-};
+}
 
-export default nextConfig;
+export default nextConfig

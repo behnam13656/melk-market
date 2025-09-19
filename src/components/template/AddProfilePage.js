@@ -17,6 +17,8 @@ function AddProfilePage({ data }) {
     phone: "",
     price: "",
     realState: "",
+    Totalfloors: "",
+    floors: "",
     constructionDate: new Date(),
     category: "",
     rules: [],
@@ -64,94 +66,112 @@ function AddProfilePage({ data }) {
   };
 
   // ثبت یا ویرایش آگهی
-// ثبت یا ویرایش آگهی
-const submitProfile = async (method = "POST") => {
-  // 📌 ولیدیشن شماره تماس
-  const phonePattern = /^09\d{9}$/;
-  if (!phonePattern.test(profileData.phone)) {
-    return toast.error("شماره تماس باید 11 رقم و با 09 شروع شود");
-  }
+  // ثبت یا ویرایش آگهی
+  const submitProfile = async (method = "POST") => {
+    // 📌 ولیدیشن شماره تماس
 
-  // 📌 ولیدیشن عنوان
-  if (!profileData.title?.trim()) {
-    return toast.error("عنوان آگهی وارد نشده");
-  }
-  if (profileData.title.trim().length < 5) {
-    return toast.error("عنوان آگهی نباید کمتر از 5 حرف باشد");
-  }
+    // 📌 ولیدیشن عنوان
+    if (!profileData.title?.trim()) {
+      return toast.error("عنوان آگهی وارد نشده");
+    }
+    if (profileData.title.trim().length < 5) {
+      return toast.error("عنوان آگهی نباید کمتر از 5 حرف باشد");
+    }
 
-  // 📌 ولیدیشن توضیحات
-  if (!profileData.description?.trim()) {
-    return toast.error("توضیحات وارد نشده");
-  }
+    // 📌 ولیدیشن توضیحات
+    if (!profileData.description?.trim()) {
+      return toast.error("توضیحات وارد نشده");
+    }
 
-  // 📌 ولیدیشن قیمت
-  const priceStr = String(profileData.price ?? ""); // همیشه تبدیل به استرینگ
-  if (!priceStr.trim()) {
-    return toast.error("قیمت وارد نشده");
-  }
+    // 📌 ولیدیشن قیمت
+    const priceStr = String(profileData.price ?? ""); // همیشه تبدیل به استرینگ
+    if (!priceStr.trim()) {
+      return toast.error("قیمت وارد نشده");
+    }
+    const phonePattern = /^09\d{9}$/;
+    if (!phonePattern.test(profileData.phone)) {
+      return toast.error("شماره تماس باید 11 رقم و با 09 شروع شود");
+    }
+    const priceNum = Number(priceStr.replace(/,/g, "")); // حذف کاما و تبدیل به عدد
+    if (isNaN(priceNum)) {
+      return toast.error("قیمت باید عدد باشد");
+    }
+    // 📌 ولیدیشن تعداد طبقات
+    if (!profileData.Totalfloors?.trim()) {
+      return toast.error("تعداد کل طبقات وارد نشده");
+    }
+    if (isNaN(Number(profileData.Totalfloors))) {
+      return toast.error("تعداد کل طبقات باید عدد باشد");
+    }
 
-  const priceNum = Number(priceStr.replace(/,/g, "")); // حذف کاما و تبدیل به عدد
-  if (isNaN(priceNum)) {
-    return toast.error("قیمت باید عدد باشد");
-  }
-  if (priceNum < 1000000) {
-    return toast.error("قیمت نباید کمتر از 1 میلیون باشد");
-  }
+    // 📌 ولیدیشن طبقه
+    if (!profileData.floors?.trim()) {
+      return toast.error("شماره طبقه وارد نشده");
+    }
+    if (isNaN(Number(profileData.floors))) {
+      return toast.error("شماره طبقه باید عدد باشد");
+    }
 
-  // 🚀 آپلود و ارسال
-  setLoading(true);
-  try {
-    // آپلود تصاویر
-    const imagesUrls = [];
-    for (const img of profileData.images) {
-      if (!img.uploaded && img.file) {
-        const formData = new FormData();
-        formData.append("images", img.file);
+    if (!phonePattern.test(profileData.phone)) {
+      return toast.error("شماره تماس باید 11 رقم و با 09 شروع شود");
+    }
 
-        const res = await fetch("/api/upload", {
-          method: "POST",
-          body: formData,
-        });
+    if (priceNum < 1000000) {
+      return toast.error("قیمت نباید کمتر از 1 میلیون باشد");
+    }
 
-        const data = await res.json();
-        if (!res.ok || !data.urls) throw new Error("آپلود تصویر موفق نبود");
+    // 🚀 آپلود و ارسال
+    setLoading(true);
+    try {
+      // آپلود تصاویر
+      const imagesUrls = [];
+      for (const img of profileData.images) {
+        if (!img.uploaded && img.file) {
+          const formData = new FormData();
+          formData.append("images", img.file);
 
-        imagesUrls.push(data.urls[0]);
-      } else if (img.uploaded) {
-        imagesUrls.push(img.url);
+          const res = await fetch("/api/upload", {
+            method: "POST",
+            body: formData,
+          });
+
+          const data = await res.json();
+          if (!res.ok || !data.urls) throw new Error("آپلود تصویر موفق نبود");
+
+          imagesUrls.push(data.urls[0]);
+        } else if (img.uploaded) {
+          imagesUrls.push(img.url);
+        }
       }
+
+      // دیتای نهایی
+      const finalData = {
+        ...profileData,
+        price: priceNum, // به عدد ذخیره شه
+        images: imagesUrls,
+      };
+
+      // ذخیره پروفایل
+      const res = await fetch("/api/profile", {
+        method,
+        body: JSON.stringify(finalData),
+        headers: { "Content-Type": "application/json" },
+      });
+
+      const data = await res.json();
+      if (data.error) {
+        toast.error(data.error);
+      } else {
+        toast.success(data.message);
+        router.push("/dashboard/my-profile");
+        router.refresh();
+      }
+    } catch (err) {
+      toast.error(err.message);
+    } finally {
+      setLoading(false);
     }
-
-    // دیتای نهایی
-    const finalData = {
-      ...profileData,
-      price: priceNum, // به عدد ذخیره شه
-      images: imagesUrls,
-    };
-
-    // ذخیره پروفایل
-    const res = await fetch("/api/profile", {
-      method,
-      body: JSON.stringify(finalData),
-      headers: { "Content-Type": "application/json" },
-    });
-
-    const data = await res.json();
-    if (data.error) {
-      toast.error(data.error);
-    } else {
-      toast.success(data.message);
-      router.push("/dashboard/my-profile");
-      router.refresh();
-    }
-  } catch (err) {
-    toast.error(err.message);
-  } finally {
-    setLoading(false);
-  }
-};
-
+  };
 
   return (
     <div className={styles.container}>
@@ -163,6 +183,7 @@ const submitProfile = async (method = "POST") => {
         profileData={profileData}
         setProfileData={setProfileData}
       />
+
       <TextInput
         title="توضیحات"
         name="description"
@@ -170,6 +191,7 @@ const submitProfile = async (method = "POST") => {
         setProfileData={setProfileData}
         textarea
       />
+
       <TextInput
         title="آدرس"
         name="location"
@@ -196,6 +218,18 @@ const submitProfile = async (method = "POST") => {
       />
 
       <RadioList profileData={profileData} setProfileData={setProfileData} />
+      <TextInput
+        title="تعداد کل طبقات"
+        name="Totalfloors"
+        profileData={profileData}
+        setProfileData={setProfileData}
+      />
+      <TextInput
+        title="طبقه"
+        name="floors"
+        profileData={profileData}
+        setProfileData={setProfileData}
+      />
       <TextList
         title="امکانات رفاهی"
         profileData={profileData}
@@ -215,7 +249,7 @@ const submitProfile = async (method = "POST") => {
 
       <div className={styles.imageUpload}>
         <label className={styles.uploadLabel}>
-          + افزودن عکس
+          افزودن عکس
           <input
             type="file"
             multiple

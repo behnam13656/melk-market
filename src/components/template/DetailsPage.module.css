@@ -206,7 +206,14 @@
 .fullscreenModal .closeBtn:hover {
   background: red;
 }
-
+.detels{
+  border: 2px solid #304ffe;
+}
+.detels h3{
+  margin-bottom: 20px;
+  text-align: center;
+  color: #0026ff9d;
+}
 /* واکنشگرایی موبایل */
 @media (max-width: 768px) {
   .container {

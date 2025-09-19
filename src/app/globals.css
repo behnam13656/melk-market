@@ -6,10 +6,11 @@
 }
 html,
 body {
-  max-width: 1200px;
+  max-width: 1500px;
   overflow-x: hidden;
   margin: auto;
   padding: 0 10px;
+  font-display: swap;
 }
 
 body {

@@ -26,6 +26,7 @@ const profileSchema = new Schema(
       type: Number,
       required: true,
     },
+    
     constructionDate: {
       type: Date,
       required: true,
@@ -39,12 +40,21 @@ const profileSchema = new Schema(
       type: [String],
       default: [],
     },
+    Totalfloors: {
+      type: Number,
+      required: true,
+    },
+    floors: {
+      type: Number,
+      required: true,
+    },
+
     rules: {
       type: [String],
       default: [],
     },
     images: {
-      type: [String], // آرایه‌ای از آدرس یا لینک عکس‌ها
+      type: [String],
       default: [],
     },
     userId: {

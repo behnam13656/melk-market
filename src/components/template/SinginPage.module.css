@@ -1,0 +1,103 @@
+.form {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 90vh;
+  direction: rtl;
+  text-align: right;
+}
+
+.form h4 {
+  color: #304ffe;
+  font-weight: 600;
+  font-size: 2rem;
+  margin-bottom: 20px;
+}
+
+.form form {
+  display: flex;
+  flex-direction: column;
+  max-width: 700px;
+  box-shadow: #304ffe4a 0px 4px 15px;
+  border: 2px solid #304ffe;
+  padding: 40px;
+  border-radius: 10px;
+  margin-bottom: 30px;
+}
+
+.inputBox {
+  position: relative;
+  width: 250px;
+  margin-bottom: 40px;
+}
+
+.inputBox input {
+  width: 100%;
+  padding: 10px 10px 10px 10px;
+  border: 1px dashed #304ffe;
+  border-radius: 5px;
+  font-size: 1rem;
+  color: grey;
+  outline: none;
+  background: transparent;
+  direction: rtl;
+}
+
+.inputBox label {
+  position: absolute;
+  right: 10px;
+  top: 10px;
+  color: grey;
+  font-size: 1rem;
+  pointer-events: none;
+  transition: 0.3s ease;
+}
+
+.inputBox .icon {
+  position: absolute;
+  left: 10px;
+  top: 60%;
+  transform: translateY(-50%);
+  font-size: 18px;
+  color: grey;
+  cursor: pointer;
+}
+
+.inputBox input:focus + label,
+.inputBox input:not(:placeholder-shown) + label {
+  top: -12px;
+  right: 5px;
+  font-size: 0.9rem;
+  color: #304ffe;
+  background: #fff;
+  padding: 0 5px;
+}
+
+.form button {
+  border: none;
+  background-color: #304ffe;
+  color: #fff;
+  font-size: 1.2rem;
+  font-weight: 400;
+  border-radius: 5px;
+  transition: all ease-in 0.1s;
+  cursor: pointer;
+  padding: 8px 0;
+}
+
+.form button:hover {
+  transform: scale(1.05);
+}
+.signin {
+  margin-top: 20px;
+  display: flex;
+  align-items: center;
+}
+.signin p {
+  margin-left: 5px;
+}
+.signin a {
+  color: #304ffe;
+  font-size: 1.2rem;
+}

@@ -1,26 +1,83 @@
-.container input,
-.container textarea {
-  margin-bottom: 40px;
-  width: 300px;
-  border: 1px #304ffe dashed;
-  color: grey;
-  border-radius: 5px;
-  padding: 10px;
-  font-size: 1rem;
-  height: 40px;
+.container {
+  margin-bottom: 20px;
+  width: 100%;
+  max-width: 400px;
+  position: relative;
 }
 
-.container input:focus,
-.container textarea:focus {
-  border: 1px #304ffe solid;
-  outline: none;
-}
-
-.container textarea {
-  height: 100px;
-}
-
-.container p {
+.label {
   font-size: 1.1rem;
   margin-bottom: 5px;
+  display: block;
+}
+
+.inputField {
+  width: 100%;
+  border: 1px dashed #304ffe;
+  border-radius: 8px;
+  padding: 10px;
+  font-size: 1rem;
+  color: grey;
+  transition: all 0.2s ease;
+}
+
+.inputField:focus {
+  border: 1px solid #304ffe;
+  outline: none;
+  box-shadow: 0 0 5px rgba(48, 79, 254, 0.3);
+}
+
+.textareaWrapper {
+  position: relative;
+  width: 100%;
+}
+
+.textareaField {
+  width: 100%;
+  min-height: 120px;
+  border: 1px dashed #304ffe;
+  border-radius: 8px;
+padding: 10px;
+  font-size: 1rem;
+  color: grey;
+  resize: vertical;
+  transition: all 0.2s ease;
+}
+
+.textareaField:focus {
+  border: 1px solid #304ffe;
+  outline: none;
+  box-shadow: 0 0 5px rgba(48, 79, 254, 0.3);
+}
+
+.micBtn {
+  position: absolute;
+  top: 98px;
+  right: 0px;
+  background: #304ffe;
+  color: #fff;
+  border: none;
+  border-radius: 50%;
+  width: 35px;
+  height: 35px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 16px;
+  transition: background 0.2s ease, transform 0.1s ease;
+}
+
+.micBtn:hover {
+  background: #1a34c2;
+  transform: scale(1.05);
+}
+
+.micBtn:active {
+  transform: scale(0.95);
+}
+
+/* وقتی ضبط فعاله */
+.recording {
+  background: #e53935 !important;
 }
