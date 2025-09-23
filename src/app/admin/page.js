@@ -7,7 +7,6 @@ import { authOptions } from "../api/auth/[...nextauth]/route";
 import DashboardSidebar from "@/components/layout/DashboardSidebar";
 import AdminPage from "@/components/template/AdminPage";
 
-
 export const metadata = {
   title: "پنل ادمین | ملک مارکت",
 };

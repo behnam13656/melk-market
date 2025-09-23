@@ -17,8 +17,8 @@ async function MYprofile() {
       },
     },
   ]);
-  
-  return <MyProfilesPage profiles={user.profiles}/>
+
+  return <MyProfilesPage profiles={user.profiles} />;
 }
 
 export default MYprofile;

@@ -5,7 +5,7 @@ import { authOptions } from "@/app/api/auth/[...nextauth]/route";
 import Link from "next/link";
 import LogoutButton from "../module/LogoutButton";
 
-async function DashboardSidebar({ children, email, role }) {  
+async function DashboardSidebar({ children, email, role }) {
   return (
     <div className={styles.container}>
       <div className={styles.sidebar}>

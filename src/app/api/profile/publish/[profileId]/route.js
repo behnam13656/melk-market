@@ -1,14 +1,15 @@
-import Profile from "@/models/Profile";
-import User from "@/models/User";
-import connectDB from "@/utils/connectDB";
-import { getServerSession } from "next-auth";
 import { NextResponse } from "next/server";
+import { getServerSession } from "next-auth";
+import connectDB from "@/utils/connectDB";
+import User from "@/models/User";
+import Profile from "@/models/Profile";
+
 
 export async function PATCH(req, context) {
   try {
     await connectDB();
 
-    const id = await context.params.profileId;
+    const id = context.params.profileId;
 
     const session = await getServerSession(req);
     if (!session) {
