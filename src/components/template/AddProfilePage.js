@@ -17,8 +17,6 @@ function AddProfilePage({ data }) {
     phone: "",
     price: "",
     realState: "",
-    Totalfloors: "",
-    floors: "",
     constructionDate: new Date(),
     category: "",
     rules: [],
@@ -95,21 +93,6 @@ function AddProfilePage({ data }) {
     const priceNum = Number(priceStr.replace(/,/g, "")); // حذف کاما و تبدیل به عدد
     if (isNaN(priceNum)) {
       return toast.error("قیمت باید عدد باشد");
-    }
-    // 📌 ولیدیشن تعداد طبقات
-    if (!profileData.Totalfloors?.trim()) {
-      return toast.error("تعداد کل طبقات وارد نشده");
-    }
-    if (isNaN(Number(profileData.Totalfloors))) {
-      return toast.error("تعداد کل طبقات باید عدد باشد");
-    }
-
-    // 📌 ولیدیشن طبقه
-    if (!profileData.floors?.trim()) {
-      return toast.error("شماره طبقه وارد نشده");
-    }
-    if (isNaN(Number(profileData.floors))) {
-      return toast.error("شماره طبقه باید عدد باشد");
     }
 
     if (!phonePattern.test(profileData.phone)) {
@@ -205,7 +188,7 @@ function AddProfilePage({ data }) {
         setProfileData={setProfileData}
       />
       <TextInput
-        title="قیمت(تومان)"
+        title="قیمت (تومان)"
         name="price"
         profileData={profileData}
         setProfileData={setProfileData}
@@ -217,19 +200,7 @@ function AddProfilePage({ data }) {
         setProfileData={setProfileData}
       />
 
-      <RadioList profileData={profileData} setProfileData={setProfileData} />
-      <TextInput
-        title="تعداد کل طبقات"
-        name="Totalfloors"
-        profileData={profileData}
-        setProfileData={setProfileData}
-      />
-      <TextInput
-        title="طبقه"
-        name="floors"
-        profileData={profileData}
-        setProfileData={setProfileData}
-      />
+      <RadioList profileData={profileData} setProfileData={setProfileData} />  
       <TextList
         title="امکانات رفاهی"
         profileData={profileData}

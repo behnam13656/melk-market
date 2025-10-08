@@ -36,10 +36,10 @@ function RadioList({ profileData, setProfileData }) {
           <label htmlFor="stote">مغازه</label>
           <input
             type="radio"
-            id="stote"
+            id="store"
             name="category"
-            value="stote"
-            checked={category === "stote"}
+            value="store"
+            checked={category === "store"}
             onChange={changeHandler}
           />
         </div>

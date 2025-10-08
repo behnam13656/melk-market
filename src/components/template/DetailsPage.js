@@ -23,8 +23,6 @@ function DetailsPage({
     category,
     constructionDate,
     images,
-    Totalfloors,
-    floors,
   },
 }) {
   return (
@@ -65,10 +63,6 @@ function DetailsPage({
             <BiCalendarCheck />
             {new Date(constructionDate).toLocaleDateString("fa-IR")}
           </p>
-        </div>
-        <div className={styles.detels}>
-          <h3>مشخصات ملک</h3>
-          <p>تعداد طبقات: {e2p(`${floors}  از ${Totalfloors}`)}</p>
         </div>
       </div>
     </div>

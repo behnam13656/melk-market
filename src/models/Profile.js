@@ -40,15 +40,6 @@ const profileSchema = new Schema(
       type: [String],
       default: [],
     },
-    Totalfloors: {
-      type: Number,
-      required: true,
-    },
-    floors: {
-      type: Number,
-      required: true,
-    },
-
     rules: {
       type: [String],
       default: [],

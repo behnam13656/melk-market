@@ -1,53 +1,50 @@
 import { NextResponse } from "next/server";
-import fs from "fs";
-import path from "path";
-import sharp from "sharp"; // npm i sharp
+import { getGridFSBucket } from "@/utils/gridFs";
 
-export const POST = async (req) => {
+export async function POST(req) {
   try {
-    const contentType = req.headers.get("content-type") || "";
-    if (!contentType.includes("multipart/form-data")) {
-      return NextResponse.json({ error: "فرمت فایل نامعتبر" }, { status: 400 });
+    const formData = await req.formData();
+    const file = formData.get("images");
+
+    if (!file) {
+      return NextResponse.json({ error: "هیچ فایلی ارسال نشده!" }, { status: 400 });
     }
 
-    const boundaryMatch = contentType.match(/boundary=(.+)$/);
-    if (!boundaryMatch) return NextResponse.json({ error: "خطا در boundary" }, { status: 400 });
-    const boundary = `--${boundaryMatch[1]}`;
+    const buffer = Buffer.from(await file.arrayBuffer());
+    const bucket = await getGridFSBucket();
 
-    const buffer = Buffer.from(await req.arrayBuffer());
-    const uploadDir = path.join(process.cwd(), "public/uploads");
-    if (!fs.existsSync(uploadDir)) fs.mkdirSync(uploadDir, { recursive: true });
+    return new Promise((resolve, reject) => {
+      const uploadStream = bucket.openUploadStream(file.name, {
+        contentType: file.type,
+      });
 
-    const parts = buffer
-      .toString("binary")
-      .split(boundary)
-      .filter(p => p.includes("filename="));
+      uploadStream.on("error", (err) => {
+        console.error("GridFS Upload Error:", err);
+        reject(NextResponse.json({ error: "آپلود ناموفق بود" }, { status: 500 }));
+      });
 
-    const urls = [];
+      uploadStream.on("finish", (fileInfo) => {
+        // ✅ بعضی ورژن‌ها فایل رو توی آرگومان نمی‌فرستن، پس باید از خود استریم بگیریم
+        const uploadedId = fileInfo?._id || uploadStream.id;
 
-    for (const part of parts) {
-      const match = part.match(/filename="(.+?)"/);
-      if (!match) continue;
+        if (!uploadedId) {
+          return reject(
+            NextResponse.json({ error: "شناسه فایل دریافت نشد" }, { status: 500 })
+          );
+        }
 
-      const originalName = match[1];
-      const tempStart = part.indexOf("\r\n\r\n") + 4;
-      const fileBuffer = Buffer.from(part.slice(tempStart), "binary");
+        resolve(
+          NextResponse.json(
+            { urls: [`/api/image/${uploadedId.toString()}`] },
+            { status: 200 }
+          )
+        );
+      });
 
-      // نام فایل جدید با پسوند webp
-      const filename = Date.now() + "-" + originalName.split(".")[0] + ".webp";
-      const filepath = path.join(uploadDir, filename);
-
-      // تبدیل و فشرده‌سازی با sharp
-      await sharp(fileBuffer)
-        .webp({ quality: 70 }) // کیفیت 70 درصد، می‌تونی کمتر یا بیشتر کنی
-        .toFile(filepath);
-
-      urls.push(`/uploads/${filename}`);
-    }
-
-    return NextResponse.json({ urls });
+      uploadStream.end(buffer);
+    });
   } catch (err) {
-    console.error("Upload Error:", err);
-    return NextResponse.json({ error: "مشکلی در آپلود رخ داده است" }, { status: 500 });
+    console.error("Upload API Error:", err);
+    return NextResponse.json({ error: "خطا در سرور" }, { status: 500 });
   }
-};
+}
